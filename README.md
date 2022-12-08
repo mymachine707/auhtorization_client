@@ -16,3 +16,4 @@ Category service da qiladigan ishlarim ro'yxati:
 8. .env example + 
 9. .env   ++ 
 10. Run gRPC in bloomRPC +
+11
