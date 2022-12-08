@@ -80,8 +80,7 @@ func (stg Postgres) GetClientList(offset, limit int, search string) (resp *eComm
 	}
 
 	rows, err := stg.db.Queryx(`
-	Select 
-	"id",
+	Select "id",
 	"firstname",
 	"lastname",
 	"phone",
