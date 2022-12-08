@@ -6,17 +6,10 @@ import (
 
 // Interfaces ...
 type Interfaces interface {
-	// For Product
-	AddProduct(id string, entity *eCommerce.CreateProductRequest) error
-	GetProductByID(id string) (*eCommerce.GetProductByIDResponse, error)
-	GetProductList(offset, limit int, search string) (*eCommerce.GetProductListResponse, error)
-	UpdateProduct(product *eCommerce.UpdateProductRequest) error
-	DeleteProduct(idStr string) error
-
-	// For Category
-	AddCategory(id string, entity *eCommerce.CreateCategoryRequest) error
-	GetCategoryByID(id string) (*eCommerce.Category, error)
-	GetCategoryList(offset, limit int, search string) (resp *eCommerce.GetCategoryListResponse, err error)
-	UpdateCategory(category *eCommerce.UpdateCategoryRequest) error
-	DeleteCategory(idStr string) error
+	// For Client
+	AddClient(id string, entity *eCommerce.CreateClientRequest) error
+	GetClientByID(id string) (*eCommerce.Client, error)
+	GetClientList(offset, limit int, search string) (resp *eCommerce.GetClientListResponse, err error)
+	UpdateClient(client *eCommerce.UpdateClientRequest) error
+	DeleteClient(idStr string) error
 }

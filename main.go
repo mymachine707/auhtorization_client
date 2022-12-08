@@ -10,8 +10,7 @@ import (
 
 	"mymachine707/config"
 	eCommerce "mymachine707/protogen/eCommerce"
-	category "mymachine707/services/categorys"
-	products "mymachine707/services/products"
+	client "mymachine707/services/client"
 	"mymachine707/storage"
 	"mymachine707/storage/postgres"
 
@@ -59,11 +58,8 @@ func main() {
 
 	s := grpc.NewServer()
 
-	CategoryService := category.NewCategoryService(stg)
-	eCommerce.RegisterCategoryServiceServer(s, CategoryService)
-
-	ProductService := products.NewProductService(stg)
-	eCommerce.RegisterProductServiceServer(s, ProductService)
+	ClientService := client.NewClientService(stg)
+	eCommerce.RegisterClientServiceServer(s, ClientService)
 
 	reflection.Register(s)
 	if err := s.Serve(listener); err != nil {

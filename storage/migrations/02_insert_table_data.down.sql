@@ -1,4 +1,4 @@
-ALTER TABLE product DROP CONSTRAINT IF EXISTS fk_product_category;
+ALTER TABLE product DROP CONSTRAINT IF EXISTS fk_product_client;
 
 BEGIN;
 
@@ -11,8 +11,8 @@ BEGIN;
 	DELETE FROM product where id='367ca98a-1781-4d0c-96e0-cf173ce24906';
 	DELETE FROM product where id='4587750c-1903-4a26-bb92-c84d61093629';
 
-	DELETE FROM category where id='b9401ecc-e7b7-4e83-b387-eb85072adcd9';
-	DELETE FROM category where id='1f27a12d-93c7-4272-9eec-43e28a00482d';
+	DELETE FROM client where id='b9401ecc-e7b7-4e83-b387-eb85072adcd9';
+	DELETE FROM client where id='1f27a12d-93c7-4272-9eec-43e28a00482d';
 	
 
 COMMIT;
