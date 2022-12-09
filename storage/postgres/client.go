@@ -37,7 +37,6 @@ func (stg Postgres) AddClient(id string, entity *eCommerce.CreateClientRequest) 
 		entity.PhoneNumber,
 		entity.Address,
 		entity.Type,
-		entity.Lastname,
 		entity.Password,
 	)
 
@@ -60,8 +59,8 @@ func (stg Postgres) GetClientByID(id string) (*eCommerce.Client, error) {
 		"username",
 		"phone",
 		"address",
-		"type",,
-		"password"
+		"type",
+		"password",
 		"created_at",
 		"updated_at"
 	FROM client WHERE "deleted_at" is null AND id=$1`, id).Scan(
@@ -102,7 +101,7 @@ func (stg Postgres) GetClientList(offset, limit int, search string) (resp *eComm
 	"lastname",
 	"username",
 	"phone",
-	"address"
+	"address",
 	"type",
 	"password",
 	"created_at",
@@ -113,8 +112,8 @@ func (stg Postgres) GetClientList(offset, limit int, search string) (resp *eComm
 		("lastname" ILIKE '%' || $1 || '%') OR 
 		("username" ILIKE '%' || $1 || '%') OR 
 		("phone" ILIKE '%' || $1 || '%') OR 
-		("address" ILIKE '%' || $1 || '%')) OR
-		("type" ILIKE '%' || $1 || '%') 
+		("address" ILIKE '%' || $1 || '%') OR
+		("type" ILIKE '%' || $1 || '%'))
 		LIMIT $2 
 		OFFSET $3`, search, limit, offset)
 
@@ -136,7 +135,7 @@ func (stg Postgres) GetClientList(offset, limit int, search string) (resp *eComm
 			&a.Type,
 			&a.Password,
 			&a.CreatedAt,
-			&a.UpdatedAt,
+			&updatedAt,
 		)
 
 		if updatedAt != nil {
