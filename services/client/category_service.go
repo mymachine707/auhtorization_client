@@ -52,6 +52,7 @@ func (s *clientService) CreateClient(ctx context.Context, req *eCommerce.CreateC
 		Lastname:    client.Lastname,
 		PhoneNumber: client.PhoneNumber,
 		Address:     client.Address,
+		Type:        client.Type,
 		CreatedAt:   client.CreatedAt,
 		UpdatedAt:   client.UpdatedAt,
 	}, nil
@@ -76,6 +77,7 @@ func (s *clientService) UpdateClient(ctx context.Context, req *eCommerce.UpdateC
 		Lastname:    client.Lastname,
 		PhoneNumber: client.PhoneNumber,
 		Address:     client.Address,
+		Type:        client.Type,
 		CreatedAt:   client.CreatedAt,
 		UpdatedAt:   client.UpdatedAt,
 	}, nil
@@ -100,6 +102,7 @@ func (s *clientService) DeleteClient(ctx context.Context, req *eCommerce.DeleteC
 		Lastname:    client.Lastname,
 		PhoneNumber: client.PhoneNumber,
 		Address:     client.Address,
+		Type:        client.Type,
 		CreatedAt:   client.CreatedAt,
 		UpdatedAt:   client.UpdatedAt,
 	}, nil
@@ -130,6 +133,7 @@ func (s *clientService) GetClientById(ctx context.Context, req *eCommerce.GetCli
 		Lastname:    client.Lastname,
 		PhoneNumber: client.PhoneNumber,
 		Address:     client.Address,
+		Type:        client.Type,
 		CreatedAt:   client.CreatedAt,
 		UpdatedAt:   client.UpdatedAt,
 	}, nil
