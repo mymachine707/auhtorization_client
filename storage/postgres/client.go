@@ -15,23 +15,30 @@ func (stg Postgres) AddClient(id string, entity *eCommerce.CreateClientRequest) 
 		"id",
 		"firstname",
 		"lastname",
+		"username"
 		"phone",
 		"address",
-		"type"
+		"type",
+		"password"
 		) VALUES(
 		$1,
 		$2,
 		$3,
 		$4,
 		$5,
-		$6
+		$6,
+		$7,
+		$8
 	)`,
 		id,
 		entity.Firstname,
 		entity.Lastname,
+		entity.Username,
 		entity.PhoneNumber,
 		entity.Address,
 		entity.Type,
+		entity.Lastname,
+		entity.Password,
 	)
 
 	if err != nil {
@@ -50,18 +57,22 @@ func (stg Postgres) GetClientByID(id string) (*eCommerce.Client, error) {
 		"id",
 		"firstname",
 		"lastname",
+		"username"
 		"phone",
 		"address",
-		"type",
+		"type",,
+		"password"
 		"created_at",
 		"updated_at"
 	FROM client WHERE "deleted_at" is null AND id=$1`, id).Scan(
 		&result.Id,
 		&result.Firstname,
 		&result.Lastname,
+		&result.Username,
 		&result.PhoneNumber,
 		&result.Address,
 		&result.Type,
+		&result.Password,
 		&result.CreatedAt,
 		&updatedAt,
 	)
@@ -89,15 +100,18 @@ func (stg Postgres) GetClientList(offset, limit int, search string) (resp *eComm
 	"id",
 	"firstname",
 	"lastname",
+	"username",
 	"phone",
 	"address"
 	"type",
+	"password",
 	"created_at",
 	"updated_at"
  from client WHERE deleted_at is null AND 
  		(
 		("firstname" ILIKE '%' || $1 || '%') OR 
 		("lastname" ILIKE '%' || $1 || '%') OR 
+		("username" ILIKE '%' || $1 || '%') OR 
 		("phone" ILIKE '%' || $1 || '%') OR 
 		("address" ILIKE '%' || $1 || '%')) OR
 		("type" ILIKE '%' || $1 || '%') 
@@ -116,9 +130,11 @@ func (stg Postgres) GetClientList(offset, limit int, search string) (resp *eComm
 			&a.Id,
 			&a.Firstname,
 			&a.Lastname,
+			&a.Username,
 			&a.PhoneNumber,
 			&a.Address,
 			&a.Type,
+			&a.Password,
 			&a.CreatedAt,
 			&a.UpdatedAt,
 		)
@@ -141,10 +157,11 @@ func (stg Postgres) GetClientList(offset, limit int, search string) (resp *eComm
 // UpdateClient ...
 func (stg Postgres) UpdateClient(client *eCommerce.UpdateClientRequest) error {
 
-	rows, err := stg.db.NamedExec(`Update client set "firstname"=:f, "lastname"=:l,"phone"=:p,"address"=:a,"type"=:t, "updated_at"=now() Where "id"=:id and "deleted_at" is null`, map[string]interface{}{
+	rows, err := stg.db.NamedExec(`Update client set "firstname"=:f, "lastname"=:l,"username"=:u,"phone"=:p,"address"=:a,"type"=:t, "updated_at"=now() Where "id"=:id and "deleted_at" is null`, map[string]interface{}{
 		"id": client.Id,
 		"f":  client.Firstname,
 		"l":  client.Lastname,
+		"u":  client.Username,
 		"p":  client.PhoneNumber,
 		"a":  client.Address,
 		"t":  client.Type,
