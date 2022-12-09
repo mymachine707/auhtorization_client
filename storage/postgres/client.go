@@ -15,7 +15,7 @@ func (stg Postgres) AddClient(id string, entity *eCommerce.CreateClientRequest) 
 		"id",
 		"firstname",
 		"lastname",
-		"username"
+		"username",
 		"phone",
 		"address",
 		"type",
@@ -57,7 +57,7 @@ func (stg Postgres) GetClientByID(id string) (*eCommerce.Client, error) {
 		"id",
 		"firstname",
 		"lastname",
-		"username"
+		"username",
 		"phone",
 		"address",
 		"type",,
