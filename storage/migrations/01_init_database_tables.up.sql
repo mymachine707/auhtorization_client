@@ -9,3 +9,5 @@ CREATE TABLE IF NOT EXISTS client (
 	"updated_at" TIMESTAMP,
 	"deleted_at" TIMESTAMP
  );
+
+	
