@@ -10,17 +10,13 @@ import (
 
 	"mymachine707/config"
 	eCommerce "mymachine707/protogen/eCommerce"
-	client "mymachine707/services/client"
+	client "mymachine707/services"
 	"mymachine707/storage"
 	"mymachine707/storage/postgres"
 
 	_ "github.com/lib/pq"
 	"github.com/swaggo/swag/example/basic/docs"
 )
-
-func initGRPC(cfg config.Config, stg storage.Interfaces) {
-
-}
 
 // @license.name	Apache 2.0
 func main() {

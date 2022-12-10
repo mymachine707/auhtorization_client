@@ -1,4 +1,4 @@
-package user
+package client
 
 import (
 	"context"
@@ -13,15 +13,15 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *userService) Login(ctx context.Context, req *eCommerce.LoginUserRequest) (*eCommerce.TokenResponse, error) {
+func (s *clientService) Login(ctx context.Context, req *eCommerce.LoginAuthRequest) (*eCommerce.TokenResponse, error) {
 	log.Println("Login...")
 	fmt.Println(req)
-	errAuth := errors.New("Username or Password wrong")
+	errUser := errors.New("Username or Password wrong")
 	// requsetdan kevotgan username bilan bazadigi username qidirib topiladi
-	user, err := s.stg.GetUserByUsername(req.Username)
+	user, err := s.stg.GetClientByUsername(req.Username)
 	if err != nil {
 		log.Println(err.Error())
-		return nil, status.Errorf(codes.Unauthenticated, errAuth.Error())
+		return nil, status.Errorf(codes.Unauthenticated, errUser.Error())
 	}
 
 	// requsetdan kevotgan password bilan bazadan kegan username passwordini solishtiriladi.
@@ -31,7 +31,7 @@ func (s *userService) Login(ctx context.Context, req *eCommerce.LoginUserRequest
 	}
 
 	if !match {
-		return nil, status.Errorf(codes.Unauthenticated, errAuth.Error())
+		return nil, status.Errorf(codes.Unauthenticated, errUser.Error())
 	}
 
 	//Token generator
@@ -50,7 +50,7 @@ func (s *userService) Login(ctx context.Context, req *eCommerce.LoginUserRequest
 	}, nil
 }
 
-func (s *userService) HasAccess(ctx context.Context, req *eCommerce.TokenRequest) (*eCommerce.HasAccessResponse, error) {
+func (s *clientService) HasAccess(ctx context.Context, req *eCommerce.TokenRequest) (*eCommerce.HasAccessResponse, error) {
 	log.Println("HasAccess...")
 
 	result, err := util.ParseClaims(req.Token, s.cfg.SECRET_KEY)
@@ -64,7 +64,7 @@ func (s *userService) HasAccess(ctx context.Context, req *eCommerce.TokenRequest
 
 	log.Println(result.Username)
 
-	user, err := s.stg.GetUserByID(result.UserID)
+	user, err := s.stg.GetClientByID(result.UserID)
 	if err != nil {
 		log.Println(status.Errorf(codes.PermissionDenied, " util.ParseClaims: %s", err.Error()))
 		return &eCommerce.HasAccessResponse{

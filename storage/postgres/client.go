@@ -3,6 +3,7 @@ package postgres
 import (
 	"errors"
 	"mymachine707/protogen/eCommerce"
+	"strings"
 	"time"
 )
 
@@ -10,7 +11,10 @@ var err error
 
 // AddClient ...
 func (stg Postgres) AddClient(id string, entity *eCommerce.CreateClientRequest) error {
-
+	res := strings.ToLower(entity.Type)
+	if res == "sudo" {
+		return errors.New("permission denied create type 'sudo'")
+	}
 	_, err = stg.db.Exec(`INSERT INTO client (
 		"id",
 		"firstname",
@@ -202,4 +206,45 @@ func (stg Postgres) DeleteClient(idStr string) error {
 	}
 
 	return errors.New("Cannot delete Client becouse Client not found")
+}
+
+// GetClientByID ...
+func (stg Postgres) GetClientByUsername(username string) (*eCommerce.Client, error) {
+
+	result := &eCommerce.Client{}
+
+	var updatedAt *time.Time
+	err := stg.db.QueryRow(`SELECT
+		"id",
+		"firstname",
+		"lastname",
+		"username",
+		"phone",
+		"address",
+		"type",
+		"password",
+		"created_at",
+		"updated_at"
+	FROM client WHERE "deleted_at" is null AND "username"=$1`, username).Scan(
+		&result.Id,
+		&result.Firstname,
+		&result.Lastname,
+		&result.Username,
+		&result.PhoneNumber,
+		&result.Address,
+		&result.Type,
+		&result.Password,
+		&result.CreatedAt,
+		&updatedAt,
+	)
+
+	if err != nil {
+		return result, err
+	}
+
+	if updatedAt != nil {
+		result.UpdatedAt = updatedAt.String()
+	}
+
+	return result, nil
 }

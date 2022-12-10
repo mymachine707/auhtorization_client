@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"mymachine707/config"
 	"mymachine707/protogen/eCommerce"
 	"mymachine707/storage"
 
@@ -14,6 +15,7 @@ import (
 )
 
 type clientService struct {
+	cfg config.Config
 	stg storage.Interfaces
 	eCommerce.UnimplementedClientServiceServer
 }

@@ -12,4 +12,6 @@ type Interfaces interface {
 	GetClientList(offset, limit int, search string) (resp *eCommerce.GetClientListResponse, err error)
 	UpdateClient(client *eCommerce.UpdateClientRequest) error
 	DeleteClient(idStr string) error
+
+	GetClientByUsername(username string) (*eCommerce.Client, error)
 }

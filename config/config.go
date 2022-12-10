@@ -21,6 +21,8 @@ type Config struct {
 	PostgresDatabase string
 	PostgresUser     string
 	PostgresPassword string
+
+	SECRET_KEY string
 }
 
 // Load ...
@@ -43,6 +45,8 @@ func Load() Config {
 	config.PostgresDatabase = cast.ToString(getOrReturnDefaultValue("POSTGRES_DATABASE", "test"))
 	config.PostgresUser = cast.ToString(getOrReturnDefaultValue("POSTGRES_USER", "test"))
 	config.PostgresPassword = cast.ToString(getOrReturnDefaultValue("POSTGRES_PASSWORD", "test"))
+
+	config.SECRET_KEY = cast.ToString(getOrReturnDefaultValue("SECRET_KEY", "YOUR SECRET KEY"))
 
 	return config
 }
