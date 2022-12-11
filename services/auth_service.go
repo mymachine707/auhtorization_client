@@ -19,15 +19,15 @@ func (s *clientService) Login(ctx context.Context, req *eCommerce.LoginAuthReque
 	errUser := errors.New("Username or Password wrong")
 	// requsetdan kevotgan username bilan bazadigi username qidirib topiladi
 	user, err := s.stg.GetClientByUsername(req.Username)
+
 	if err != nil {
-		log.Println(err.Error())
 		return nil, status.Errorf(codes.Unauthenticated, errUser.Error())
 	}
 
 	// requsetdan kevotgan password bilan bazadan kegan username passwordini solishtiriladi.
 	match, err := util.ComparePassword(user.Password, req.Password)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, " s.stg.GetUserByUsername: %s", err.Error())
+		return nil, status.Errorf(codes.Internal, "s.stg.ComparePassword: %s", err.Error())
 	}
 
 	if !match {
@@ -61,8 +61,6 @@ func (s *clientService) HasAccess(ctx context.Context, req *eCommerce.TokenReque
 			HasAccess: false,
 		}, nil
 	}
-
-	log.Println(result.Username)
 
 	user, err := s.stg.GetClientByID(result.UserID)
 	if err != nil {

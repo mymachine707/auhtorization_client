@@ -8,6 +8,7 @@ import (
 	"mymachine707/config"
 	"mymachine707/protogen/eCommerce"
 	"mymachine707/storage"
+	"mymachine707/util"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
@@ -38,7 +39,17 @@ func (s *clientService) CreateClient(ctx context.Context, req *eCommerce.CreateC
 
 	id := uuid.New()
 
-	err := s.stg.AddClient(id.String(), req)
+	// parolni hashlash
+	fmt.Println(req.Type, len(req.Type))
+	hashedPassword, err := util.HashPassword(req.Password)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, " util.HashPassword: %s", err.Error())
+	}
+
+	req.Password = hashedPassword
+	//
+
+	err = s.stg.AddClient(id.String(), req)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "s.stg.AddClient: %s", err)
 	}
@@ -48,24 +59,19 @@ func (s *clientService) CreateClient(ctx context.Context, req *eCommerce.CreateC
 		return nil, status.Errorf(codes.Internal, "s.stg.GetClientByID: %s", err)
 	}
 
-	return &eCommerce.Client{
-		Id:          client.Id,
-		Firstname:   client.Firstname,
-		Lastname:    client.Lastname,
-		Username:    client.Username,
-		PhoneNumber: client.PhoneNumber,
-		Address:     client.Address,
-		Type:        client.Type,
-		Password:    client.Password,
-		CreatedAt:   client.CreatedAt,
-		UpdatedAt:   client.UpdatedAt,
-	}, nil
+	return client, nil
 }
 
 func (s *clientService) UpdateClient(ctx context.Context, req *eCommerce.UpdateClientRequest) (*eCommerce.Client, error) {
 	fmt.Println("<<< ---- UpdateClient ---->>>")
 
-	err := s.stg.UpdateClient(req)
+	hashedPassword, err := util.HashPassword(req.Password)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, " util.HashPassword: %s", err.Error())
+	}
+
+	req.Password = hashedPassword
+	err = s.stg.UpdateClient(req)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "s.stg.UpdateClient: %s", err)
 	}
@@ -75,18 +81,7 @@ func (s *clientService) UpdateClient(ctx context.Context, req *eCommerce.UpdateC
 		return nil, status.Errorf(codes.Internal, "s.stg.GetClientByID: %s", err)
 	}
 
-	return &eCommerce.Client{
-		Id:          client.Id,
-		Firstname:   client.Firstname,
-		Lastname:    client.Lastname,
-		Username:    client.Username,
-		PhoneNumber: client.PhoneNumber,
-		Address:     client.Address,
-		Type:        client.Type,
-		Password:    client.Password,
-		CreatedAt:   client.CreatedAt,
-		UpdatedAt:   client.UpdatedAt,
-	}, nil
+	return client, nil
 }
 
 func (s *clientService) DeleteClient(ctx context.Context, req *eCommerce.DeleteClientRequest) (*eCommerce.Client, error) {
@@ -102,18 +97,7 @@ func (s *clientService) DeleteClient(ctx context.Context, req *eCommerce.DeleteC
 		return nil, status.Errorf(codes.Internal, "s.stg.DeleteClient: %s", err)
 	}
 
-	return &eCommerce.Client{
-		Id:          client.Id,
-		Firstname:   client.Firstname,
-		Lastname:    client.Lastname,
-		Username:    client.Username,
-		PhoneNumber: client.PhoneNumber,
-		Address:     client.Address,
-		Type:        client.Type,
-		Password:    client.Password,
-		CreatedAt:   client.CreatedAt,
-		UpdatedAt:   client.UpdatedAt,
-	}, nil
+	return client, nil
 }
 
 func (s *clientService) GetClientList(ctx context.Context, req *eCommerce.GetClientListRequest) (*eCommerce.GetClientListResponse, error) {
@@ -135,16 +119,5 @@ func (s *clientService) GetClientById(ctx context.Context, req *eCommerce.GetCli
 		return nil, status.Errorf(codes.Internal, "s.stg.GetClientByID: %s", err)
 	}
 
-	return &eCommerce.Client{
-		Id:          client.Id,
-		Firstname:   client.Firstname,
-		Lastname:    client.Lastname,
-		Username:    client.Username,
-		PhoneNumber: client.PhoneNumber,
-		Address:     client.Address,
-		Type:        client.Type,
-		Password:    client.Password,
-		CreatedAt:   client.CreatedAt,
-		UpdatedAt:   client.UpdatedAt,
-	}, nil
+	return client, nil
 }

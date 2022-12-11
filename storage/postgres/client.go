@@ -13,8 +13,9 @@ var err error
 func (stg Postgres) AddClient(id string, entity *eCommerce.CreateClientRequest) error {
 	res := strings.ToLower(entity.Type)
 	if res == "sudo" {
-		return errors.New("permission denied create type 'sudo'")
+		return errors.New("permission denied: create type 'sudo'")
 	}
+
 	_, err = stg.db.Exec(`INSERT INTO client (
 		"id",
 		"firstname",
@@ -53,6 +54,7 @@ func (stg Postgres) AddClient(id string, entity *eCommerce.CreateClientRequest) 
 
 // GetClientByID ...
 func (stg Postgres) GetClientByID(id string) (*eCommerce.Client, error) {
+
 	result := &eCommerce.Client{}
 
 	var updatedAt *time.Time
@@ -160,7 +162,12 @@ func (stg Postgres) GetClientList(offset, limit int, search string) (resp *eComm
 // UpdateClient ...
 func (stg Postgres) UpdateClient(client *eCommerce.UpdateClientRequest) error {
 
-	rows, err := stg.db.NamedExec(`Update client set "firstname"=:f, "lastname"=:l,"username"=:u,"phone"=:p,"address"=:a,"type"=:t, "updated_at"=now() Where "id"=:id and "deleted_at" is null`, map[string]interface{}{
+	res := strings.ToLower(client.Type)
+	if res == "sudo" {
+		return errors.New("permission denied update type 'sudo'")
+	}
+
+	rows, err := stg.db.NamedExec(`Update client set "firstname"=:f, "lastname"=:l,"username"=:u, "phone"=:p,"address"=:a,"type"=:t, "password"=:pw, "updated_at"=now() Where "id"=:id and "deleted_at" is null`, map[string]interface{}{
 		"id": client.Id,
 		"f":  client.Firstname,
 		"l":  client.Lastname,
@@ -168,6 +175,7 @@ func (stg Postgres) UpdateClient(client *eCommerce.UpdateClientRequest) error {
 		"p":  client.PhoneNumber,
 		"a":  client.Address,
 		"t":  client.Type,
+		"pw": client.Password,
 	})
 
 	if err != nil {
